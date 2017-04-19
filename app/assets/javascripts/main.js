@@ -1,13 +1,7 @@
 $(document).ready(function() {
   allDisasters();
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
-  var map = new mapboxgl.Map({
-      container: 'map', // container id
-      style: 'mapbox://styles/mapbox/dark-v9', //hosted style id
-      center: [-77.38, 39], // starting position
-      zoom: 3 // starting zoom
-  });
 })
+var disastersObject = new Object();
 
 function allDisasters() {
   $.ajax({
@@ -17,29 +11,34 @@ function allDisasters() {
     .then(function( disasters ) {
       console.log( disasters );
       fetchDisasters(disasters);
-      $("#name").append( disasterString );
+  })
+  .done(function(disasters) {
+    console.log(disastersObject);
   })
 }
 var disasterString = ""
-
+var test = ""
 function fetchDisasters(disasters) {
   disasters["data"].forEach (function(disaster) {
+  disastersObject[disaster["label"]] = {}
+  disastersObject[disaster["label"]]["type"] =  disaster["primary_type"]
     if (disaster["operation"]) {
-      fetchCoordinates(disaster["operation"])
+      fetchCoordinates(disaster["operation"], disaster)
     }
-    disasterString = disasterString + formatDisaster(disaster)
   })
 }
 
-function fetchCoordinates(operations) {
+function fetchCoordinates(operations, disaster) {
       operations.forEach (function(operation) {
         $.ajax({
         	method: "GET",
         	url: operation.self
         })
         .then(function(operation){
-          console.log(formatCoordinates(operation.data[0]));
-          test(formatCoordinates(operation.data[0]));
+          disastersObject[disaster["label"]][operation.data[0]["label"]] =   {};
+          disastersObject[disaster["label"]][operation.data[0]["label"]]["operation id"] =   operation.data[0]["id"];
+          disastersObject[disaster["label"]][operation.data[0]["label"]]["latitude"] =  operation.data[0]["country"]["geolocation"]["lat"];
+          disastersObject[disaster["label"]][operation.data[0]["label"]]["longitute"] =  operation.data[0]["country"]["geolocation"]["lon"];
         })
       })
   }
