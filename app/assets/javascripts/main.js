@@ -1,5 +1,12 @@
 $(document).ready(function() {
   allDisasters();
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
+  var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/dark-v9', //hosted style id
+      center: [-77.38, 39], // starting position
+      zoom: 3 // starting zoom
+  });
 })
 
 function allDisasters() {
