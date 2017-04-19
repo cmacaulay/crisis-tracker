@@ -1,8 +1,8 @@
 $(document).ready(function() {
-  ajaxCall1();
+  allDisasters();
 })
 
-function ajaxCall1() {
+function allDisasters() {
   $.ajax({
         method: "GET",
         url: "https://www.humanitarianresponse.info/api/v1.0/disasters?filter[status]=current",
@@ -17,33 +17,44 @@ var disasterString = ""
 
 function fetchDisasters(disasters) {
   disasters["data"].forEach (function(disaster) {
-    disasterString = disasterString + formatDisaster(disaster)
     if (disaster["operation"]) {
       fetchCoordinates(disaster["operation"])
     }
+    disasterString = disasterString + formatDisaster(disaster)
   })
+}
+
+function fetchCoordinates(operations) {
+      operations.forEach (function(operation) {
+        $.ajax({
+        	method: "GET",
+        	url: operation.self
+        })
+        .then(function(operation){
+          console.log(formatCoordinates(operation.data[0]));
+          test(formatCoordinates(operation.data[0]));
+        })
+      })
+  }
+
+function test(data){
+  disasterString = disasterString + data
 }
 
 function formatDisaster(disaster) {
   return "<li>Name: "
   + disaster["label"]
-  + "</li>\n<ul><li>Description: "
-  + disaster["body-html"]
-  + "</li><li>Type: "
+  + "<ul></li>\n<li>Type: "
   + disaster["primary_type"]
   + "</li></ul>"
 }
 
-function fetchCoordinates(operations) {
-      operations.forEach (function(operation) {
-        console.log( operation );
-        $.ajax({
-        	method: "GET",
-        	url: operation.self
-        })
-        .then(function(coordinates){
-          console.log(coordinates["data"][0]["country"]["geolocation"])
-          debugger
-        })
-      })
-  }
+function formatCoordinates(data) {
+  return "<ul><li>Country: "
+  + data["label"]
+  + "</li><li>Latitude: "
+  + data["country"]["geolocation"]["lat"]
+  + "</li><li>Longitute: "
+  + data["country"]["geolocation"]["lon"]
+  + "</li></ul>"
+}
