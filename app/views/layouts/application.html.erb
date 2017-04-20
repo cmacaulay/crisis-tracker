@@ -2,8 +2,10 @@
 <html>
   <head>
     <title>Crisis Tracker</title>
+    <meta charset=utf-8 />
+    <title></title>
+    <link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
     <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
     <%= csrf_meta_tags %>
   </head>
   <body>
@@ -18,5 +20,12 @@
     <div>
     <%= yield %>
     </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous">
+    </script>
+    <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   </body>
 </html>

@@ -2,6 +2,7 @@ $(document).ready(function() {
   allDisasters();
 })
 var disastersObject = new Object();
+disastersObject.data = new Array();
 
 function allDisasters() {
   $.ajax({
@@ -9,58 +10,59 @@ function allDisasters() {
         url: "https://www.humanitarianresponse.info/api/v1.0/disasters?filter[status]=current",
         })
     .then(function( disasters ) {
-      console.log( disasters );
       fetchDisasters(disasters);
-  })
-  .done(function(disasters) {
-    console.log(disastersObject);
-  })
-}
-var disasterString = ""
-var test = ""
-function fetchDisasters(disasters) {
-  disasters["data"].forEach (function(disaster) {
-  disastersObject[disaster["label"]] = {}
-  disastersObject[disaster["label"]]["type"] =  disaster["primary_type"]
-    if (disaster["operation"]) {
-      fetchCoordinates(disaster["operation"], disaster)
-    }
   })
 }
 
-function fetchCoordinates(operations, disaster) {
+var disasterString = ""
+function fetchDisasters(disasters) {
+  disasters["data"].forEach (function(disaster) {
+    disasterObject = {}
+    disasterObject["disaster"] = disaster["label"]
+    disasterObject["type"] =  disaster["primary_type"]
+      if (disaster["operation"]) {
+        fetchCoordinates(disaster["operation"], disaster, disasterObject)
+      }
+    disastersObject.data.push(disasterObject)
+  })
+}
+
+function fetchCoordinates(operations, disaster, disasterObject) {
       operations.forEach (function(operation) {
         $.ajax({
         	method: "GET",
         	url: operation.self
         })
         .then(function(operation){
-          disastersObject[disaster["label"]][operation.data[0]["label"]] =   {};
-          disastersObject[disaster["label"]][operation.data[0]["label"]]["operation id"] =   operation.data[0]["id"];
-          disastersObject[disaster["label"]][operation.data[0]["label"]]["latitude"] =  operation.data[0]["country"]["geolocation"]["lat"];
-          disastersObject[disaster["label"]][operation.data[0]["label"]]["longitute"] =  operation.data[0]["country"]["geolocation"]["lon"];
+          operationObject = {}
+          disasterObject["operations"] =   []
+          operationObject["country"] =  operation.data[0]["label"];
+          operationObject["lat"] =  operation.data[0]["country"]["geolocation"]["lat"];
+          operationObject["long"] =  operation.data[0]["country"]["geolocation"]["lon"];
+
+          disasterObject["operations"].push(operationObject)
+        })
+        .then(function(operation){
+          initMarkers(disastersObject);
         })
       })
   }
 
-function test(data){
-  disasterString = disasterString + data
-}
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
+  var mapLeaflet = L.mapbox.map('map-leaflet', 'mapbox.light')
+    .setView([7.295889, 30.308701], 2);
 
-function formatDisaster(disaster) {
-  return "<li>Name: "
-  + disaster["label"]
-  + "<ul></li>\n<li>Type: "
-  + disaster["primary_type"]
-  + "</li></ul>"
-}
+    function initMarkers(disastersObject) {
+        disastersObject["data"].forEach (function(disaster){
 
-function formatCoordinates(data) {
-  return "<ul><li>Country: "
-  + data["label"]
-  + "</li><li>Latitude: "
-  + data["country"]["geolocation"]["lat"]
-  + "</li><li>Longitute: "
-  + data["country"]["geolocation"]["lon"]
-  + "</li></ul>"
-}
+          if (disaster.operations) {
+            disaster.operations.forEach (function(operation){
+              L.marker([parseFloat(operation.lat), parseFloat(operation.long)]).addTo(mapLeaflet);
+            })
+          }
+
+          })
+
+    }
+
+  mapLeaflet.scrollWheelZoom.disable();
