@@ -5,7 +5,28 @@ body {
 
 .map {
   position:absolute;
+  padding-top: 20px;
   top:0;
   bottom:0;
   width:100%;
+}
+
+nav, nav .nav-wrapper i, nav a.button-collapse, nav a.button-collapse i {
+    height: 20px;
+    line-height: 20px;
+}
+nav {
+    color: #fff;
+    background-color: #000;
+    width: 100%;
+    font-family: 'Quicksand', sans-serif;
+}
+
+nav .brand-logo {
+    position: absolute;
+    color: #fff;
+    display: inline-block;
+    font-size: 1.3rem;
+    padding: 0;
+    white-space: nowrap;
 }
