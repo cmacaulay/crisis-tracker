@@ -54,7 +54,6 @@ function fetchCoordinates(operations, disaster, disasterObject) {
 
     function initMarkers(disastersObject) {
         disastersObject["data"].forEach (function(disaster){
-
           if (disaster.operations) {
             disaster.operations.forEach (function(operation){
               L.marker([parseFloat(operation.lat), parseFloat(operation.long)]).addTo(mapLeaflet);

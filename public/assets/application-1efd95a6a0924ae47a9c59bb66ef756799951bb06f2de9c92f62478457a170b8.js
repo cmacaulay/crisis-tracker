@@ -12195,13 +12195,10 @@ function allDisasters() {
         url: "https://www.humanitarianresponse.info/api/v1.0/disasters?filter[status]=current",
         })
     .then(function( disasters ) {
-      console.log( disasters );
       fetchDisasters(disasters);
   })
-  .then(function(disasters) {
-    console.log(disastersObject);
-  })
 }
+
 var disasterString = ""
 function fetchDisasters(disasters) {
   disasters["data"].forEach (function(disaster) {
@@ -12231,58 +12228,28 @@ function fetchCoordinates(operations, disaster, disasterObject) {
           disasterObject["operations"].push(operationObject)
         })
         .then(function(operation){
-          initMap();
+          initMarkers(disastersObject);
         })
       })
   }
 
-  function initMap() {
-    var myLatLng = {lat: 7.295889, lng: 30.308701};
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
+  var mapLeaflet = L.mapbox.map('map-leaflet', 'mapbox.light')
+    .setView([7.295889, 30.308701], 2);
 
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 2,
-      center: myLatLng
+    function initMarkers(disastersObject) {
+        disastersObject["data"].forEach (function(disaster){
+          if (disaster.operations) {
+            disaster.operations.forEach (function(operation){
+              L.marker([parseFloat(operation.lat), parseFloat(operation.long)]).addTo(mapLeaflet);
+            })
+          }
 
-    });
-    disastersObject["data"].forEach (function(disaster){
-      if (disaster.operations) {
-      disaster.operations.forEach (function(operation) {
-        var myLatLng = {lat: parseFloat(operation.lat), lng: parseFloat(operation.long)};
+          })
 
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: operation.country
-        });
-      })
     }
 
-    })  }
-
-function initMarkers(disastersObject) {
-    disastersObject["data"].forEach (function(disaster){
-      disaster.operations.forEach (function(operation){
-        var myLatLng = {lat: parseFloat(operation.lat), lng: parseFloat(operation.long)};
-
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: operation.country
-        });
-      })
-    })
-}
-;
-// import key from "./keys"
-var key = "AIzaSyD4T06txDCvz6BqpgYiLvsAb60P4WhSHZU";
-var mapScript = document.createElement("script")
-
-mapScript.src = "https://maps.googleapis.com/maps/api/js?key=" + key + "&callback=initMap";
-mapScript.async = true;
-mapScript.defer = true;
-
-document.body.append(mapScript)
-;
+  mapLeaflet.scrollWheelZoom.disable();
 (function() {
 
 

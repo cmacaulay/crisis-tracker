@@ -1,0 +1,13 @@
+/* line 1, /Users/caseymacaulay/Projects/Turing/3module/projects/personal-project/crisis-tracker/app/assets/stylesheets/home.scss */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 6, /Users/caseymacaulay/Projects/Turing/3module/projects/personal-project/crisis-tracker/app/assets/stylesheets/home.scss */
+.map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
