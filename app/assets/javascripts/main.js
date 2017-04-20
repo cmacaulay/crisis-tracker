@@ -69,7 +69,7 @@ var type = ""
                                 + type
                                 + "</p>"
 
-              marker.bindPopup(popupContent).openPopup();
+              marker.bindPopup(popupContent);
 
             })
           }
