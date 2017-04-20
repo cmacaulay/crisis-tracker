@@ -47,16 +47,30 @@ function fetchCoordinates(operations, disaster, disasterObject) {
         })
       })
   }
-
+var name = ""
+var type = ""
   L.mapbox.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
   var mapLeaflet = L.mapbox.map('map-leaflet', 'mapbox.light')
-    .setView([7.295889, 30.308701], 2);
+    .setView([7.295889, 30.308701], 3);
 
     function initMarkers(disastersObject) {
         disastersObject["data"].forEach (function(disaster){
+          name = disaster.disaster
+          type = disaster.type
           if (disaster.operations) {
             disaster.operations.forEach (function(operation){
-              L.marker([parseFloat(operation.lat), parseFloat(operation.long)]).addTo(mapLeaflet);
+              var marker = L.marker([parseFloat(operation.lat), parseFloat(operation.long)]).addTo(mapLeaflet);
+
+              var popupContent = "<h6>Country: "
+                                + operation.country
+                                + "</h6><br /><p>"
+                                + name
+                                + "</p><br />"
+                                + type
+                                + "</p>"
+
+              marker.bindPopup(popupContent).openPopup();
+
             })
           }
 
