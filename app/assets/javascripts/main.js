@@ -79,3 +79,4 @@ var type = ""
     }
 
   mapLeaflet.scrollWheelZoom.disable();
+// ugly JS FTW
