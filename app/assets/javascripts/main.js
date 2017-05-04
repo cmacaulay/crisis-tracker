@@ -51,7 +51,7 @@ var name = ""
 var type = ""
   L.mapbox.accessToken = 'pk.eyJ1IjoiY21hY2F1bGF5IiwiYSI6ImNqMWxxeGw4ZDAwMmwycW5vbTBkdnFteW0ifQ.m3rKIq58Xw-9GYbyfEfyqw';
   var mapLeaflet = L.mapbox.map('map-leaflet', 'mapbox.light')
-    .setView([7.295889, 30.308701], 3);
+    .setView([7.295889, 30.308701], 2);
 
     function initMarkers(disastersObject) {
         disastersObject["data"].forEach (function(disaster){
@@ -79,3 +79,4 @@ var type = ""
     }
 
   mapLeaflet.scrollWheelZoom.disable();
+// ugly JS FTW
